@@ -1,3 +1,6 @@
+# This parser will need to be changed if UBC ever updates the HTML code
+# for their parsing method. Unfortunately there's no way of getting around this.
+
 module Parser
   require 'open-uri'
 
@@ -36,6 +39,29 @@ module Parser
     uri += 'section=' + sectionId
   end
 
+  def parse_course(dept, courseId, subject)
+    uri = get_course_uri(@year, @session, dept, courseId)
+    doc = Nokogiri::HTML(open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}))
+
+    description = doc.at_css('p').to_s
+    description = description.delete('<p>').delete('</p>').delete("\n").delete("\r")
+
+    if (!is_valid(description))
+      return false
+    end
+
+    course = Course.new
+    course.subject = subject
+    course.courseId = courseId
+    course.title = doc.at_css('h4').child.to_s
+    course.description = description
+
+    credits = doc.css('p')[1].to_s
+    course.credits = credits[credits.index(': ')+2].to_i
+
+    course.save
+
+  end
 
   def parse_subject(dept)
     uri = get_subject_uri(@year, @session, dept)
@@ -43,7 +69,7 @@ module Parser
 
     description = doc.at_css('p').to_s
     description = description.delete('<p>').delete('</p>').delete("\n").delete("\r")
-    
+
     if (!is_valid(description))
       return false
     end
@@ -54,6 +80,10 @@ module Parser
     subject.year = @year
     subject.session = @session
     subject.save
+
+    doc.css('#mainTable a').each do |t|
+      parse_course(dept, t.children.to_s.split(' ')[1], subject)
+    end
   end
 
 end
