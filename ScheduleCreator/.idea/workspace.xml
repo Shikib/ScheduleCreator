@@ -14,8 +14,8 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/ScheduleCreator@Development__ScheduleCreator.coverage" NAME="Development: ScheduleCreator Coverage Results" MODIFIED="1430282502951" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="ScheduleCreator" />
-    <SUITE FILE_PATH="coverage/ScheduleCreator@Rails_console__ScheduleCreator.coverage" NAME="Rails console: ScheduleCreator Coverage Results" MODIFIED="1430287202988" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="ScheduleCreator" />
+    <SUITE FILE_PATH="coverage/ScheduleCreator@Development__ScheduleCreator.coverage" NAME="Development: ScheduleCreator Coverage Results" MODIFIED="1430287641683" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="ScheduleCreator" />
+    <SUITE FILE_PATH="coverage/ScheduleCreator@Rails_console__ScheduleCreator.coverage" NAME="Rails console: ScheduleCreator Coverage Results" MODIFIED="1430288085180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="ScheduleCreator" />
     <SUITE FILE_PATH="coverage/ScheduleCreator@db_migrate__ScheduleCreator.coverage" NAME="db:migrate: ScheduleCreator Coverage Results" MODIFIED="1430286800637" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="ScheduleCreator" />
     <SUITE FILE_PATH="coverage/ScheduleCreator@db_create__ScheduleCreator.coverage" NAME="db:create: ScheduleCreator Coverage Results" MODIFIED="1430286703723" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="ScheduleCreator" />
   </component>
@@ -54,8 +54,8 @@
       <file leaf-file-name="parser.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/helpers/parser.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33268103" vertical-offset="0" max-vertical-offset="511">
-              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.49902153" vertical-offset="0" max-vertical-offset="511">
+              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -278,7 +278,7 @@
     <property name="RakeTaksPopup.undocumentedIncluded" value="false" />
     <property name="RailsGeneratorsPopup.hiddenIncluded" value="false" />
   </component>
-  <component name="RunManager" selected="Rake.db:migrate: ScheduleCreator">
+  <component name="RunManager" selected="Rails.Development: ScheduleCreator">
     <configuration default="false" name="db:create: ScheduleCreator" type="RakeRunConfigurationType" factoryName="Rake" temporary="true">
       <module name="ScheduleCreator" />
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
@@ -782,8 +782,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/helpers/parser.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33268103" vertical-offset="0" max-vertical-offset="511">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.49902153" vertical-offset="0" max-vertical-offset="511">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
           <folding />
         </state>
       </provider>
