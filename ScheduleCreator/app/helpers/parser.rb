@@ -42,13 +42,16 @@ module Parser
     doc = Nokogiri::HTML(open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}))
 
     description = doc.at_css('p').to_s
-    description = description.delete('<p>').delete('</p>').delete("\n").delete("\r")
+    description = description.delete('<p> ').delete('</p>').delete("\n").delete("\r")
     if (!is_valid(description))
       return false
     end
 
     subject = Subject.new
     subject.description = description
+    subject.department = dept
+    subject.year = @year
+    subject.session = @session
     subject.save
   end
 
