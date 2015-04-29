@@ -3,7 +3,9 @@ class CreateCourses < ActiveRecord::Migration
     create_table :courses do |t|
       t.belongs_to  :subject, index: true
       t.string      :courseId
-      t.number      :credits
+      t.string      :title
+      t.text        :description
+      t.integer      :credits
       t.boolean     :lecture_required?
       t.boolean     :lab_required?
       t.boolean     :tutorial_required?

@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :tutorial_sections
+
+  resources :lab_sections
+
+  resources :lecture_sections
+
   resources :courses
 
   resources :subjects

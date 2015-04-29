@@ -42,7 +42,8 @@ module Parser
     doc = Nokogiri::HTML(open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}))
 
     description = doc.at_css('p').to_s
-    description = description.delete('<p> ').delete('</p>').delete("\n").delete("\r")
+    description = description.delete('<p>').delete('</p>').delete("\n").delete("\r")
+    
     if (!is_valid(description))
       return false
     end

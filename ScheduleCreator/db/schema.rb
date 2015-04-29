@@ -11,10 +11,61 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150429045917) do
+ActiveRecord::Schema.define(version: 20150429190940) do
+
+  create_table "courses", force: true do |t|
+    t.integer  "subject_id"
+    t.string   "courseId"
+    t.string   "title"
+    t.text     "description"
+    t.integer  "credits"
+    t.boolean  "lecture_required?"
+    t.boolean  "lab_required?"
+    t.boolean  "tutorial_required?"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "courses", ["subject_id"], name: "index_courses_on_subject_id", using: :btree
+
+  create_table "lab_sections", force: true do |t|
+    t.integer  "course_id"
+    t.integer  "true_id"
+    t.integer  "seats_remaining"
+    t.integer  "currently_registered"
+    t.integer  "term"
+    t.string   "section_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "lecture_sections", force: true do |t|
+    t.integer  "course_id"
+    t.integer  "true_id"
+    t.integer  "seats_remaining"
+    t.integer  "currently_registered"
+    t.integer  "term"
+    t.string   "section_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "subjects", force: true do |t|
     t.text     "description"
+    t.string   "department"
+    t.string   "year"
+    t.string   "session"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tutorial_sections", force: true do |t|
+    t.integer  "course_id"
+    t.integer  "true_id"
+    t.integer  "seats_remaining"
+    t.integer  "currently_registered"
+    t.integer  "term"
+    t.string   "section_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
