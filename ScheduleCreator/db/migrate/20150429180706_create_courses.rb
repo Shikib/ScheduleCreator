@@ -6,8 +6,8 @@ class CreateCourses < ActiveRecord::Migration
       t.string      :title
       t.text        :description
       t.integer     :credits
-      t.boolean     :lab_required?
-      t.boolean     :tutorial_required?
+      t.boolean     :lab_required
+      t.boolean     :tutorial_required
       t.timestamps
     end
   end

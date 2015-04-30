@@ -47,6 +47,26 @@ module Parser
     return sectionId.length < 6
   end
 
+  def parse_non_lecture_section(dept, courseId, sectionId, lecture)
+    uri = get_section_uri(@year, @session, dept, courseId, sectionId)
+    doc = Nokogiri::HTML(open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}))
+
+    title = doc.at_css('h4').children.to_s
+    section_type = title.split('(')[1][0...-1]
+    if (section_type == 'Tutorial' || section_type == 'Discussion')
+      section = TutorialSection.new
+    else
+      section = LabSection.new
+    end
+    section.lecture_section = lecture
+    section.section_id = sectionId
+    section.title = title
+    section.seats_remaining = doc.css('.table-nonfluid strong')[1].children.to_s.to_i
+    section.currently_registered = doc.css('.table-nonfluid strong')[2].children.to_s.to_i
+    section.term = lecture.term
+    section.save
+  end
+
   def parse_lecture_section(dept, courseId, sectionId, sections, course)
     uri = get_section_uri(@year, @session, dept, courseId, sectionId)
     doc = Nokogiri::HTML(open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}))
@@ -59,6 +79,18 @@ module Parser
     lecture.currently_registered = doc.css('.table-nonfluid strong')[2].children.to_s.to_i
     lecture.term = sectionId[0].to_i
     lecture.save
+
+    sections.each do |s|
+      parse_non_lecture_section(dept, courseId, s, lecture)
+    end
+
+    if (LabSection.where(lecture_section: lecture).size > 0)
+      course.lab_required = true
+    end
+    if (TutorialSection.where(lecture_section: lecture).size > 0)
+      course.tutorial_required = true
+    end
+    course.save
   end
 
   def parse_course(dept, courseId, subject)
@@ -80,7 +112,7 @@ module Parser
 
     credits = doc.css('p')[1].to_s
     course.credits = credits[credits.index(': ')+2].to_i
-    # lab_required? and tutorial_required? are handled by section parsing
+    # lab_required and tutorial_required are handled by section parsing
     course.save
 
     # parse sections
