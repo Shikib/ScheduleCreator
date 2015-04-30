@@ -47,6 +47,14 @@ module Parser
     return sectionId.length < 6
   end
 
+  def is_vantage_id?(sectionId)
+    return sectionId[0] == 'V'
+  end
+
+  def is_waitlist_id?(sectionId)
+    return sectionId[1] == 'W' || sectionId[1] == 'C'
+  end
+
   def parse_non_lecture_section(dept, courseId, sectionId, lecture)
     uri = get_section_uri(@year, @session, dept, courseId, sectionId)
     doc = Nokogiri::HTML(open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}))
@@ -61,8 +69,15 @@ module Parser
     section.lecture_section = lecture
     section.section_id = sectionId
     section.title = title.split(' (')[0]
-    section.seats_remaining = doc.css('.table-nonfluid strong')[1].children.to_s.to_i
-    section.currently_registered = doc.css('.table-nonfluid strong')[2].children.to_s.to_i
+
+    seats_block = doc.css('.table-nonfluid strong')
+    if (seats_block.empty?)
+      section.seats_remaining = 0
+      section.currently_registered = 0
+    else
+      section.seats_remaining = seats_block[1].children.to_s.to_i
+      section.currently_registered = seats_block[2].children.to_s.to_i
+    end
     section.term = lecture.term
     section.save
   end
@@ -75,8 +90,15 @@ module Parser
     lecture.course = course
     lecture.section_id = sectionId
     lecture.title = doc.at_css('h4').children.to_s.split(' (')[0]
-    lecture.seats_remaining = doc.css('.table-nonfluid strong')[1].children.to_s.to_i
-    lecture.currently_registered = doc.css('.table-nonfluid strong')[2].children.to_s.to_i
+
+    seats_block = doc.css('.table-nonfluid strong')
+    if (seats_block.empty?)
+      lecture.seats_remaining = 0
+      lecture.currently_registered = 0
+    else
+      lecture.seats_remaining = seats_block[1].children.to_s.to_i
+      lecture.currently_registered = seats_block[2].children.to_s.to_i
+    end
     lecture.term = sectionId[0].to_i
     lecture.save
 
@@ -85,14 +107,14 @@ module Parser
     end
 
     if (LabSection.where(lecture_section: lecture).size > 0)
-      course.lab_required = true
+      course.lab_required = course.lab_required || true
     else
-      course.lab_required = false
+      course.lab_required = course.lab_required || false
     end
     if (TutorialSection.where(lecture_section: lecture).size > 0)
-      course.tutorial_required = true
+      course.tutorial_required = course.tutorial_required || true
     else
-      course.tutorial_required = false
+      course.tutorial_required = course.tutorial_required || false
     end
     course.save
   end
@@ -120,17 +142,23 @@ module Parser
     course.save
 
     # parse sections
+    lecture_id = ''
     sections = []
     doc.css('table tr a').each do |s|
       sectionId = s.children[0].to_s.split(' ')[2]
       if (is_lecture_id?(sectionId))
-        parse_lecture_section(dept, courseId, sectionId, sections, course)
-        sections = []
-      else
-        if (is_section_id?(sectionId))
-          sections.push(sectionId)
+        if (lecture_id != '')
+          parse_lecture_section(dept, courseId, lecture_id, sections, course)
         end
+        lecture_id = sectionId
+        sections = []
+      elsif (is_section_id?(sectionId) && !is_waitlist_id?(sectionId) && !is_vantage_id?(sectionId))
+        sections.push(sectionId)
       end
+    end
+
+    if (lecture_id != '')
+      parse_lecture_section(dept, courseId, lecture_id, sections, course)
     end
   end
 
