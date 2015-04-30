@@ -1,3 +1,3 @@
 class LabSection < ActiveRecord::Base
-  belongs_to  :course
+  belongs_to  :lecture_section
 end

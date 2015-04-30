@@ -5,8 +5,7 @@ class CreateCourses < ActiveRecord::Migration
       t.string      :courseId
       t.string      :title
       t.text        :description
-      t.integer      :credits
-      t.boolean     :lecture_required?
+      t.integer     :credits
       t.boolean     :lab_required?
       t.boolean     :tutorial_required?
       t.timestamps
