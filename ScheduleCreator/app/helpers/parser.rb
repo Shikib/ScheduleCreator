@@ -60,7 +60,7 @@ module Parser
     end
     section.lecture_section = lecture
     section.section_id = sectionId
-    section.title = title
+    section.title = title.split(' (')[0]
     section.seats_remaining = doc.css('.table-nonfluid strong')[1].children.to_s.to_i
     section.currently_registered = doc.css('.table-nonfluid strong')[2].children.to_s.to_i
     section.term = lecture.term
@@ -74,7 +74,7 @@ module Parser
     lecture = LectureSection.new
     lecture.course = course
     lecture.section_id = sectionId
-    lecture.title = doc.at_css('h4').children.to_s
+    lecture.title = doc.at_css('h4').children.to_s.split(' (')[0]
     lecture.seats_remaining = doc.css('.table-nonfluid strong')[1].children.to_s.to_i
     lecture.currently_registered = doc.css('.table-nonfluid strong')[2].children.to_s.to_i
     lecture.term = sectionId[0].to_i
