@@ -86,9 +86,13 @@ module Parser
 
     if (LabSection.where(lecture_section: lecture).size > 0)
       course.lab_required = true
+    else
+      course.lab_required = false
     end
     if (TutorialSection.where(lecture_section: lecture).size > 0)
       course.tutorial_required = true
+    else
+      course.tutorial_required = false
     end
     course.save
   end
@@ -128,9 +132,6 @@ module Parser
         end
       end
     end
-
-    # determine whether labs/tutorials are needed
-    #TODO
   end
 
   def parse_subject(dept)
