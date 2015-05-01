@@ -60,6 +60,34 @@ module Parser
     return sectionId[1] == 'W' || sectionId[1] == 'C'
   end
 
+  def add_time_block(term, day, start_time, end_time, section)
+    time = TimeBlock.new
+    time.term = term
+    time.day = day
+    time.start_time = start_time
+    time.end_time = end_time
+    time.section = section
+    time.save
+  end
+
+  def parse_time_blocks(times_block, section)
+    term_text = times_block[0].to_s
+    day_text = times_block[1].to_s
+    start_time_text = times_block[2].to_s
+    end_time_text = times_block[3].to_s
+
+    terms = term_text.split('-')
+    days = day_text.split(' ')
+    start_time = start_time_text.delete(':').to_i
+    end_time = end_time_text.delete(':').to_i
+
+    terms.each do |term|
+      days.each do |day|
+        add_time_block(term, day, start_time, end_time, section)
+      end
+    end
+  end
+
   def parse_non_lecture_section(dept, courseId, sectionId, lecture)
     uri = get_section_uri(@year, @session, dept, courseId, sectionId)
     doc = Nokogiri::HTML(open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}))
@@ -104,6 +132,9 @@ module Parser
       lecture.currently_registered = seats_block[2].children.to_s.to_i
     end
     lecture.save
+
+    times_block = doc.css('.table-striped td').chidren
+    parse_time_blocks(times_block, lecture)
 
     sections.each do |s|
       parse_non_lecture_section(dept, courseId, s, lecture)
