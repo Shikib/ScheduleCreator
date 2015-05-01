@@ -19,12 +19,17 @@ module Parser
     return true
   end
 
-  # for CPSC in 2015S you would call get_subject_uri('2015', 'S', 'CPSC')
-  def get_subject_uri(year, session, dept)
+  def get_base_uri(year, session)
     uri = 'https://courses.students.ubc.ca/cs/main?'
     uri += 'sessyr=' + year + '&'
     uri += 'sesscd=' + session +'&'
-    uri += 'pname=subjarea&tname=subjareas&req=1&dept=' + dept + '&'
+    uri += 'pname=subjarea&tname=subjareas&req=0&'
+  end
+
+  # for CPSC in 2015S you would call get_subject_uri('2015', 'S', 'CPSC')
+  def get_subject_uri(year, session, dept)
+    uri = get_base_uri(year, session).sub('req=0', 'req=1')
+    uri += 'dept=' + dept + '&'
   end
 
   # for CPSC 110 in 2015S you would call get_course_uri('2015', 'S', 'CPSC', '110')
@@ -78,7 +83,6 @@ module Parser
       section.seats_remaining = seats_block[1].children.to_s.to_i
       section.currently_registered = seats_block[2].children.to_s.to_i
     end
-    section.term = lecture.term
     section.save
   end
 
@@ -99,7 +103,6 @@ module Parser
       lecture.seats_remaining = seats_block[1].children.to_s.to_i
       lecture.currently_registered = seats_block[2].children.to_s.to_i
     end
-    lecture.term = sectionId[0].to_i
     lecture.save
 
     sections.each do |s|
@@ -182,6 +185,16 @@ module Parser
 
     doc.css('#mainTable a').each do |t|
       parse_course(dept, t.children.to_s.split(' ')[1], subject)
+    end
+  end
+
+  # will parse all the subjects/courses/lecture sections/lab sections offered in
+  # specified term
+  def parse_everything
+    uri = get_base_uri(@year, @session)
+    doc = Nokogiri::HTML(open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}))
+    doc.css('tr a').each do |sub|
+      parse_subject(sub.children.to_s)
     end
   end
 

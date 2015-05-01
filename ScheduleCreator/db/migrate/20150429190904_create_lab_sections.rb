@@ -6,7 +6,6 @@ class CreateLabSections < ActiveRecord::Migration
       t.string    :title
       t.integer    :seats_remaining
       t.integer    :currently_registered
-      t.integer    :term
       t.timestamps
     end
   end

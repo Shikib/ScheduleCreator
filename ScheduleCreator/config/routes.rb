@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :time_blocks
+
   resources :tutorial_sections
 
   resources :lab_sections
