@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150429190940) do
+ActiveRecord::Schema.define(version: 20150501221030) do
 
   create_table "courses", force: true do |t|
     t.integer  "subject_id"
@@ -34,7 +34,6 @@ ActiveRecord::Schema.define(version: 20150429190940) do
     t.string   "title"
     t.integer  "seats_remaining"
     t.integer  "currently_registered"
-    t.integer  "term"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -46,7 +45,6 @@ ActiveRecord::Schema.define(version: 20150429190940) do
     t.string   "title"
     t.integer  "seats_remaining"
     t.integer  "currently_registered"
-    t.integer  "term"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -60,6 +58,17 @@ ActiveRecord::Schema.define(version: 20150429190940) do
     t.datetime "updated_at"
   end
 
+  create_table "time_blocks", force: true do |t|
+    t.string   "term"
+    t.string   "day"
+    t.integer  "start_time"
+    t.integer  "end_time"
+    t.integer  "section_id"
+    t.string   "section_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "tutorial_sections", force: true do |t|
     t.integer  "lecture_section_id"
     t.integer  "true_id"
@@ -67,7 +76,6 @@ ActiveRecord::Schema.define(version: 20150429190940) do
     t.string   "title"
     t.integer  "seats_remaining"
     t.integer  "currently_registered"
-    t.integer  "term"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

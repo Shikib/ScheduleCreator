@@ -70,11 +70,12 @@ module Parser
     time.save
   end
 
-  def parse_time_blocks(times_block, section)
-    term_text = times_block[0].to_s
-    day_text = times_block[1].to_s
-    start_time_text = times_block[2].to_s
-    end_time_text = times_block[3].to_s
+  def parse_time_blocks_helper(times_block, section, lineNo)
+    offset = lineNo*8
+    term_text = times_block[0 + offset].to_s
+    day_text = times_block[1 + offset].to_s
+    start_time_text = times_block[2 + offset].to_s
+    end_time_text = times_block[3 + offset].to_s
 
     terms = term_text.split('-')
     days = day_text.split(' ')
@@ -86,6 +87,11 @@ module Parser
         add_time_block(term, day, start_time, end_time, section)
       end
     end
+  end
+
+  def parse_time_blocks(times_block, section)
+    lines = (times_block.size - 1) / 3
+    (0..lines-1).each{|n| parse_time_blocks_helper(times_block, section, n)}
   end
 
   def parse_non_lecture_section(dept, courseId, sectionId, lecture)
@@ -133,8 +139,8 @@ module Parser
     end
     lecture.save
 
-    times_block = doc.css('.table-striped td').chidren
-    parse_time_blocks(times_block, lecture)
+    times_block = doc.css('.table-striped td')
+    parse_time_blocks(times_block.children, lecture)
 
     sections.each do |s|
       parse_non_lecture_section(dept, courseId, s, lecture)
