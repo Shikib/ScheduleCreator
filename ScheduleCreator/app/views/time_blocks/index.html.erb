@@ -10,7 +10,12 @@
   <tbody>
     <% @time_blocks.each do |time_block| %>
       <tr>
-        <td><%= link_to 'Show', time_block %></td>
+        <td><%= time_block.section.title %></td>
+        <td><%= time_block.term %></td>
+        <td><%= time_block.day %></td>
+        <td><%= time_block.start_time %></td>
+        <td><%= time_block.end_time %></td>
+        <td><%= link_to 'More details', time_block %></td>
         <td><%= link_to 'Edit', edit_time_block_path(time_block) %></td>
         <td><%= link_to 'Destroy', time_block, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

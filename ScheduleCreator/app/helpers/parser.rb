@@ -118,6 +118,9 @@ module Parser
       section.currently_registered = seats_block[2].children.to_s.to_i
     end
     section.save
+
+    times_block = doc.css('.table-striped td')
+    parse_time_blocks(times_block.children, section)
   end
 
   def parse_lecture_section(dept, courseId, sectionId, sections, course)
