@@ -10,3 +10,4 @@ class CreateLectureSections < ActiveRecord::Migration
     end
   end
 end
+

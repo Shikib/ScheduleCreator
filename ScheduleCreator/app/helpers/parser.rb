@@ -228,9 +228,19 @@ module Parser
     end
   end
 
+  def clear_databases
+    Subject.delete_all
+    Course.delete_all
+    LectureSection.delete_all
+    LabSection.delete_all
+    TutorialSection.delete_all
+    TimeBlock.delete_all
+  end
+
   # will parse all the subjects/courses/lecture sections/lab sections offered in
   # specified term
   def parse_everything
+    clear_databases
     uri = get_base_uri(@year, @session)
     doc = Nokogiri::HTML(open(uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}))
     doc.css('tr a').each do |sub|
