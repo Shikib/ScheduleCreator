@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150501221030) do
+ActiveRecord::Schema.define(version: 20150503040932) do
 
   create_table "courses", force: true do |t|
     t.integer  "subject_id"
@@ -45,6 +45,16 @@ ActiveRecord::Schema.define(version: 20150501221030) do
     t.string   "title"
     t.integer  "seats_remaining"
     t.integer  "currently_registered"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "required_courses", force: true do |t|
+    t.string   "title"
+    t.integer  "personal_rating"
+    t.integer  "importance"
+    t.integer  "desired_grade"
+    t.integer  "estimated_difficulty"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
