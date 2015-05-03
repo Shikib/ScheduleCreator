@@ -1,0 +1,23 @@
+<h1>Listing required_courses</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @required_courses.each do |required_course| %>
+      <tr>
+        <td><%= link_to 'Show', required_course %></td>
+        <td><%= link_to 'Edit', edit_required_course_path(required_course) %></td>
+        <td><%= link_to 'Destroy', required_course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Required course', new_required_course_path %>

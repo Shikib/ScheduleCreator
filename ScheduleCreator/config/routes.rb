@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :required_courses
+
   resources :time_blocks
 
   resources :tutorial_sections
