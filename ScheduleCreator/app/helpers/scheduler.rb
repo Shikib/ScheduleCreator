@@ -86,6 +86,30 @@ module Scheduler
     end
   end
 
+  # given a list of required courses, a list of scheduled sections, a list of timeblocks
+  # computes the optimal schedule. this method ignores the fact that labs/tutorials exist
+  # and only schedules lectures
+  def schedule_courses(courses, scheduled_sections, time_blocks)
+    if (!valid_schedule?(time_blocks))
+      return false
+    end
+
+    if (courses.empty?)
+      return time_blocks
+    end
+
+    course_required = courses.pop
+    LectureSection.where(course: course_required).each do |lec|
+      new_schedule = scheduled_sections.dup.push(lec)
+      try = schedule_courses(courses, new_schedule, time_blocks + TimeBlock.where(sectiion: lec))
+      if (!try)
+        return try
+      end
+    end
+
+    return false
+  end
+
   # main scheduling method.
   # takes RequiredCourse.all (later will be RequiredCourse.where(user: User))
   # outputs list of time_blocks.
@@ -99,7 +123,7 @@ module Scheduler
       courses.push(Course.where(subject: Subject.where(department: ct.department, courseId: ct.courseId)).first)
     end
 
-
+    return schedule_courses(courses, [], [])
 
 
   end
