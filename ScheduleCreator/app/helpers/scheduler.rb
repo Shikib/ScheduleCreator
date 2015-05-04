@@ -118,15 +118,25 @@ module Scheduler
     all_new_schedules = []
     LectureSection.where(course: course_required).each do |lec|
       new_schedule = scheduled_sections.dup.push(lec)
+
+      # duplicate existing schedules
       new_schedules = schedules.dup
+
+      # try adding current section to every possible schedule
       new_schedules = new_schedules.map {|s|
+        # try to build onto current schedule
         try = schedule_courses(courses, new_schedule, [s + TimeBlock.where(section: lec)])
+
+        # if any of the schedules didn't work don't add them in
         if (try)
           s + TimeBlock.where(section: lec)
         else
           false
         end
       }
+
+      # append all schedules that built onto s, to the list of schedules formed by this
+      # level of the recursion
       all_new_schedules += new_schedules
     end
 
