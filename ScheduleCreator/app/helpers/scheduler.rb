@@ -19,7 +19,11 @@ module Scheduler
     right = []
 
     time_blocks[1..time_blocks.size-1].each do |tb|
-      if (before_in_week(tb.day, pivot.day))
+      if (tb.term.to_i < pivot.term.to_i)
+        left.push(tb)
+      elsif (pivot.term.to_i < tb.term.to_i)
+        right.push(tb)
+      elsif (before_in_week(tb.day, pivot.day))
         left.push(tb)
       elsif (before_in_week(pivot.day, tb.day))
         right.push(tb)
@@ -40,7 +44,8 @@ module Scheduler
   # overlap between consecutive time_blocks
   def exists_overlap?(time_blocks)
     (0..time_blocks.size - 2).each do |i|
-      if (time_blocks[i].day == time_blocks[i+1].day &&
+      if (time_blocks[i].term == time_blocks[i+1].term &&
+          time_blocks[i].day == time_blocks[i+1].day &&
           time_blocks[i].end_time > time_blocks[i+1].start_time)
         return true
       end
