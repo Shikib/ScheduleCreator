@@ -151,7 +151,7 @@ module Scheduler
       courses.push(Course.where(subject: Subject.where(department: ct.department), courseId: ct.courseId).first)
     end
 
-    return schedule_courses(courses, [], [])
+    return schedule_courses(courses, [], [[]])
 
 
   end
