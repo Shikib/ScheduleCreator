@@ -50,7 +50,8 @@ ActiveRecord::Schema.define(version: 20150503040932) do
   end
 
   create_table "required_courses", force: true do |t|
-    t.string   "title"
+    t.string   "department"
+    t.string   "courseId"
     t.integer  "personal_rating"
     t.integer  "importance"
     t.integer  "desired_grade"

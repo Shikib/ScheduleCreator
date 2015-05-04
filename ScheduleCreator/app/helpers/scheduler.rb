@@ -1,15 +1,29 @@
 # A Strategy model for the act of obtaining an optimal schedule list
 # that satisfies everything in the RequiredCourses table
 module Scheduler
+  # given two days of the week, determine if a comes before b
+  def before_in_week(a,b)
+    days = %w(Sun Mon Tue Wed Thu Fri Sat)
+    return days.index(a) < days.index(b)
+  end
+
   # given a list of time_blocks, sorts them by start_time
   # outputs sorted list of time_blocks
   def quicksort_timeblocks(time_blocks)
-    pivot = time_blocks[lo]
+    if (time_blocks.size <= 1)
+      return time_blocks
+    end
+
+    pivot = time_blocks[0]
     left = []
     right = []
 
     time_blocks[1..time_blocks.size-1].each do |tb|
-      if (tb.start_time < time_blocks[pivot].start_time)
+      if (before_in_week(tb.day, pivot.day))
+        left.push(tb)
+      elsif (before_in_week(pivot.day, tb.day))
+        right.push(tb)
+      elsif (tb.start_time < pivot.start_time)
         left.push(tb)
       else
         right.push(tb)
@@ -26,7 +40,8 @@ module Scheduler
   # overlap between consecutive time_blocks
   def exists_overlap?(time_blocks)
     (0..time_blocks.size - 2).each do |i|
-      if (time_blocks[i].end_time > time_blocks[i+1].start_time)
+      if (time_blocks[i].day == time_blocks[i+1].day &&
+          time_blocks[i].end_time > time_blocks[i+1].start_time)
         return true
       end
     end
@@ -101,7 +116,7 @@ module Scheduler
     course_required = courses.pop
     LectureSection.where(course: course_required).each do |lec|
       new_schedule = scheduled_sections.dup.push(lec)
-      try = schedule_courses(courses, new_schedule, time_blocks + TimeBlock.where(sectiion: lec))
+      try = schedule_courses(courses, new_schedule, time_blocks + TimeBlock.where(section: lec))
       if (!try)
         return try
       end
@@ -120,7 +135,7 @@ module Scheduler
     # obtains Courses associated with each of these titles
     courses = []
     course_titles.each do |ct|
-      courses.push(Course.where(subject: Subject.where(department: ct.department, courseId: ct.courseId)).first)
+      courses.push(Course.where(subject: Subject.where(department: ct.department), courseId: ct.courseId).first)
     end
 
     return schedule_courses(courses, [], [])
