@@ -43,6 +43,49 @@ module Scheduler
     return !exists_overlap?(time_blocks)
   end
 
+  # checks to see if the time_blocks satisfy the requirements of the course
+  def requirement_satisfied?(time_blocks, course)
+    lecture_satisfied = false
+    lab_satisfied = !course.lab_required # if lab isn't required, it's satisfied immediately
+    tutorial_satisfied = !course.tutorial_required
+    time_blocks.each do |tb|
+      if (tb.section.course == course)
+        if (tb.section_type == 'LectureSection')
+          lecture_satisfied = true
+        elsif (tb.section_type == 'LabSection')
+          lab_satisfied = true
+        elsif (tb.section_type == 'TutorialSection')
+          tutorial_satisfied = true
+        end
+      end
+    end
+    return lecture_satisfied && lab_satisfied && tutorial_satisfied
+  end
+
+  # takes in a list of time_blocks and a list of required courses
+  # as input and determines whether all of the required courses
+  # have been satisfied and ensures no additional courses were added
+  def complete_schedule?(time_blocks, courses)
+    # check to see that all course requirements have been satisfied
+    # this part is more likely to return false than the next part
+    courses.each do |course|
+      if (!requirement_satisfied?(time_blocks, course))
+        return false
+      end
+    end
+
+    # check to see that we haven't added any unnecessary courses
+    # this is more of an error check, rather than something that we
+    # expect to ever be false
+    time_blocks.each do |tb|
+      course = tb.section.course
+      if (!courses.include? course)
+        # we added an unnecessary section
+        return false
+      end
+    end
+  end
+
   # main scheduling method.
   # takes RequiredCourse.all (later will be RequiredCourse.where(user: User))
   # outputs list of time_blocks.
