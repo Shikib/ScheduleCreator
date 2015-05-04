@@ -109,25 +109,33 @@ module Scheduler
   # given a list of required courses, a list of scheduled sections, a list of timeblocks
   # computes the optimal schedule. this method ignores the fact that labs/tutorials exist
   # and only schedules lectures
-  def schedule_courses(courses, scheduled_sections, time_blocks)
-    if (!valid_schedule?(time_blocks))
-      return false
-    end
-
+  def schedule_courses(courses, scheduled_sections, schedules)
     if (courses.empty?)
-      return time_blocks
+      return schedules
     end
 
     course_required = courses.pop
+    all_new_schedules = []
     LectureSection.where(course: course_required).each do |lec|
       new_schedule = scheduled_sections.dup.push(lec)
-      try = schedule_courses(courses, new_schedule, time_blocks + TimeBlock.where(section: lec))
-      if (try)
-        return try
-      end
+      new_schedules = schedules.dup
+      new_schedules = new_schedules.map {|s|
+        try = schedule_courses(courses, new_schedule, [s + TimeBlock.where(section: lec)])
+        if (try)
+          s + TimeBlock.where(section: lec)
+        else
+          false
+        end
+      }
+      all_new_schedules += new_schedules
     end
 
-    return false
+    if (all_new_schedules.empty?)
+      return false
+    end
+
+    # filter out all the false entries from the array
+    return all_new_schedules.select {|s| s}
   end
 
   # main scheduling method.
