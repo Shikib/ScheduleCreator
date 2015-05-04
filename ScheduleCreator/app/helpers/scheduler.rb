@@ -122,7 +122,7 @@ module Scheduler
     LectureSection.where(course: course_required).each do |lec|
       new_schedule = scheduled_sections.dup.push(lec)
       try = schedule_courses(courses, new_schedule, time_blocks + TimeBlock.where(section: lec))
-      if (!try)
+      if (try)
         return try
       end
     end
