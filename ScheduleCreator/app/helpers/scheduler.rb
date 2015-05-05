@@ -106,12 +106,24 @@ module Scheduler
     end
   end
 
+  # given a list of schedules, filters out invalid scheduels
+  def filter_schedules(schedules)
+    # filter out all the false and invalid entries from the array
+    schedules = schedules.select {|s| s && valid_schedule?(s) && !s.empty?}
+
+    if (schedules.empty?)
+      return false
+    end
+
+    return schedules
+  end
+
   # given a list of required courses, a list of scheduled sections, a list of timeblocks
   # computes the optimal schedule. this method ignores the fact that labs/tutorials exist
   # and only schedules lectures
   def schedule_courses(courses, scheduled_sections, schedules)
     if (courses.empty?)
-      return schedules
+      return filter_schedules(schedules)
     end
 
     course_required = courses.pop
@@ -140,12 +152,7 @@ module Scheduler
       all_new_schedules += new_schedules
     end
 
-    if (all_new_schedules.empty?)
-      return false
-    end
-
-    # filter out all the false entries from the array
-    return all_new_schedules.select {|s| s}
+    filter_schedules(all_new_schedules)
   end
 
   # main scheduling method.
