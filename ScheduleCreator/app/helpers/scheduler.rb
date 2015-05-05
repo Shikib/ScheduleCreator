@@ -146,7 +146,8 @@ module Scheduler
      end
     end
 
-    return filter_schedules(new_schedules)
+    # filtering takes place when the base case is proc-ed
+    return new_schedules
   end
 
   # main scheduling method.
