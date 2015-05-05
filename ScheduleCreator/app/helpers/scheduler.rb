@@ -126,27 +126,27 @@ module Scheduler
       return filter_schedules(schedules)
     end
 
-    course_required = courses.pop
+    course_required = courses.last
     new_schedules = []
     LectureSection.where(course: course_required).each do |lec|
-      new_schedule = scheduled_sections.dup.push(lec)
+    new_schedule = scheduled_sections.dup.push(lec)
 
-      # try adding current section to every possible schedule
-       schedules.each  do |s|
-        # try to build onto current schedule
-        try = schedule_courses(courses, new_schedule, [s + TimeBlock.where(section: lec)])
+    # try adding current section to every possible schedule
+     schedules.each  do |s|
+      # try to build onto current schedule. courses[0..-2] is everything but the last element
+      try = schedule_courses(courses[0..-2], new_schedule, [s + TimeBlock.where(section: lec)])
 
-        # if any of the schedules didn't work don't add them in
-        if (try)
-          # try represents all the schedules formed using s and lec
-          # if try is valid, which suggests at least some schedules were formed
-          # we should add it to our list of new schedules
-          new_schedules += try
-        end
-       end
+      # if any of the schedules didn't work don't add them in
+      if (try)
+        # try represents all the schedules formed using s and lec
+        # if try is valid, which suggests at least some schedules were formed
+        # we should add it to our list of new schedules
+        new_schedules += try
+      end
+     end
     end
 
-    filter_schedules(new_schedules)
+    return filter_schedules(new_schedules)
   end
 
   # main scheduling method.

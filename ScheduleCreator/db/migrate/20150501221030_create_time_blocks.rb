@@ -10,4 +10,3 @@ class CreateTimeBlocks < ActiveRecord::Migration
     end
   end
 end
-
