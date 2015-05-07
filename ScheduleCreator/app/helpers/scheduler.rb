@@ -118,36 +118,84 @@ module Scheduler
     return schedules
   end
 
+  # given a non-empty list of sections, try construction schedules with each
+  # section takes in a list of sections and a list of schedules. returns a
+  # new list of schedules, which is |schedules| * |sections| in size.
+  def schedule_sections(sections, schedules)
+    if (sections.empty?)
+      return schedules
+    end
+
+    new_schedules = []
+    sections.each do |sec|
+      # try adding sec to each possible schedule
+      schedules.each do |sched|
+        # build the time blocks associated with this section
+        # onto an existing schedule
+        schedule = sched + TimeBlock.where(section: sec)
+
+        # add constructed schedule to the list of new schedules
+        new_schedules.push(schedule)
+      end
+
+      return new_schedules
+    end
+
+    return new_schedules
+  end
+
+  # given a non-empty list of lecture sections, try construction schedules with each
+  # section takes in a list of sections and a list of schedules. returns a
+  # new list of schedules, which is |schedules| * |sections| in size.
+  def schedule_lecture_sections(sections, schedules)
+    if (sections.empty?)
+      return schedules
+    end
+
+    new_schedules = []
+    schedules.each do |sched|
+      # try adding sec to each possible schedule
+      sections.each do |lec|
+        # build the time blocks associated with this section
+        # onto an existing schedule
+        schedule = sched + TimeBlock.where(section: lec)
+
+        schedules = [schedule]
+
+        # if need-be, add in all possible associated lab sections
+        if (lec.course.lab_required)
+          schedules = schedule_sections(LabSection.where(lecture_section: lec), schedules)
+        end
+
+        # if need-be, add in all possible associated tutorial sections
+        if (lec.course.tutorial_required)
+          schedules = schedule_sections(TutorialSection.where(lecture_section: lec), schedules)
+        end
+
+        # add constructed schedule to the list of new schedules
+        new_schedules += schedules
+      end
+    end
+
+
+    return new_schedules
+  end
+
   # given a list of required courses, a list of scheduled sections, a list of timeblocks
   # computes the optimal schedule. this method ignores the fact that labs/tutorials exist
   # and only schedules lectures
-  def schedule_courses(courses, scheduled_sections, schedules)
+  def schedule_courses(courses, schedules)
     if (courses.empty?)
       return filter_schedules(schedules)
     end
 
-    course_required = courses.last
-    new_schedules = []
-    LectureSection.where(course: course_required).each do |lec|
-    new_schedule = scheduled_sections.dup.push(lec)
+    course_required = courses.pop
 
-    # try adding current section to every possible schedule
-     schedules.each  do |s|
-      # try to build onto current schedule. courses[0..-2] is everything but the last element
-      try = schedule_courses(courses[0..-2], new_schedule, [s + TimeBlock.where(section: lec)])
-
-      # if any of the schedules didn't work don't add them in
-      if (try)
-        # try represents all the schedules formed using s and lec
-        # if try is valid, which suggests at least some schedules were formed
-        # we should add it to our list of new schedules
-        new_schedules += try
-      end
-     end
-    end
+    # add in all possible lecture sections
+    new_schedules = schedule_lecture_sections(LectureSection.where(course: course_required), schedules)
 
     # filtering takes place when the base case is proc-ed
-    return new_schedules
+    return schedule_courses(courses, new_schedules)
   end
 
   # main scheduling method.
@@ -163,7 +211,7 @@ module Scheduler
       courses.push(Course.where(subject: Subject.where(department: ct.department), courseId: ct.courseId).first)
     end
 
-    return schedule_courses(courses, [], [[]])
+    return schedule_courses(courses, [[]])
 
 
   end
