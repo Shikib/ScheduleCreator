@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root 'application#main'
+
   resources :required_courses
 
   resources :time_blocks
