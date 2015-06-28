@@ -1,23 +1,23 @@
-<h1>Listing required_courses</h1>
+<div class="container">
+  <h1>What courses are you interested in taking?</h1>
 
-<table>
-  <thead>
+  <table class="striped">
+    <thead>
     <tr>
       <th colspan="3"></th>
     </tr>
-  </thead>
+    </thead>
 
-  <tbody>
-    <% @required_courses.each do |required_course| %>
-      <tr>
-        <td><%= link_to 'Show', required_course %></td>
-        <td><%= link_to 'Edit', edit_required_course_path(required_course) %></td>
-        <td><%= link_to 'Destroy', required_course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+    <tbody>
+    <% @required_courses.each do |rc| %>
+        <tr>
+          <% @course = Course.where(courseId: rc.courseId, dept: rc.department).first %>
+          <td><%= link_to @course.title, @course %></td>
+          <td><%= link_to 'Remove', rc, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
     <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
 
-<br>
-
-<%= link_to 'New Required course', new_required_course_path %>
+  <br>
+</div>
