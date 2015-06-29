@@ -1,6 +1,41 @@
 <div class="container">
   <h1>Listing courses</h1>
 
+  <!-- Modal Structure -->
+  <div id="take_course_modal" class="modal bottom-sheet modal-fixed-footer">
+    <div class="modal-content">
+      <h4 id="take_course_title">Add Course</h4>
+
+      <form action="#">
+        <h7>How interested are you in this material?</h7>
+        <p class="range-field">
+          <input type="range" id="personal_rating" min="0" max="10" value="5" />
+        </p>
+
+        <h7>How important is it that you do well in this course?</h7>
+        <p class="range-field">
+          <input type="range" id="importance" min="0" max="10" value="5"/>
+        </p>
+
+        <h7>How difficult do you think this course will be?</h7>
+        <p class="range-field">
+          <input type="range" id="difficulty" min="0" max="10" value="5"/>
+        </p>
+
+        <h7>What grade are you aiming for?</h7>
+        <p class="range-field">
+          <input type="range" id="grade" min="0" max="100" value="50"/>
+        </p>
+      </form>
+
+    </div>
+
+
+    <div class="modal-footer">
+      <a href="#!" onclick="submit_course()" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+    </div>
+  </div>
+
   <table class="striped">
       <thead>
         <tr>
@@ -12,7 +47,11 @@
         <% @courses.each do |course| %>
           <tr>
             <td><%= link_to course.title, course %></td>
-            <td><a class="waves-effect blue waves-light btn take_course" id="<%= course.courseId  %>"><i class="material-icons right"></i>Add Course</a></tr>
+            <td>
+              <a data-target="take_course_modal" class="btn modal-trigger waves-effect blue waves-light"
+                 onclick="take_course('<%= course.subject.department  %>', <%= course.courseId %>)">Add Course</a>
+            </td>
+          </tr>
         <% end %>
       </tbody>
     </table>

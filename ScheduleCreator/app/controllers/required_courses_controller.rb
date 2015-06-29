@@ -24,7 +24,9 @@ class RequiredCoursesController < ApplicationController
   # POST /required_courses
   # POST /required_courses.json
   def create
-    @required_course = RequiredCourse.new(required_course_params)
+    @params = create_rc_params
+
+    @required_course = RequiredCourse.new(@params)
 
     respond_to do |format|
       if @required_course.save
@@ -70,5 +72,17 @@ class RequiredCoursesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def required_course_params
       params[:required_course]
+    end
+
+    # Get params for creation
+    def create_rc_params
+      params.require(:department)
+      params.require(:courseId)
+      params.require(:personal_rating)
+      params.require(:importance)
+      params.require(:desired_grade)
+      params.require(:estimated_difficulty)
+      params.permit(:department, :courseId, :personal_rating,
+                    :importance, :desired_grade, :estimated_difficulty)
     end
 end

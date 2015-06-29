@@ -11,7 +11,7 @@
     <tbody>
     <% @required_courses.each do |rc| %>
         <tr>
-          <% @course = Course.where(courseId: rc.courseId, dept: rc.department).first %>
+          <% @course = Course.where(courseId: rc.courseId, subject: Subject.where(department: rc.department)).first %>
           <td><%= link_to @course.title, @course %></td>
           <td><%= link_to 'Remove', rc, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
