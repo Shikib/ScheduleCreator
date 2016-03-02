@@ -1,4 +1,18 @@
 Rails.application.routes.draw do
+  root 'application#main'
+
+  resources :required_courses
+
+  resources :time_blocks
+
+  resources :tutorial_sections
+
+  resources :lab_sections
+
+  resources :lecture_sections
+
+  resources :courses
+
   resources :subjects
 
   # The priority is based upon order of creation: first created -> highest priority.

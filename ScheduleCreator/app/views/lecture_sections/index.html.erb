@@ -1,0 +1,23 @@
+<h1>Listing lecture_sections</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @lecture_sections.each do |lecture_section| %>
+      <tr>
+        <td><%= link_to 'Show', lecture_section %></td>
+        <td><%= link_to 'Edit', edit_lecture_section_path(lecture_section) %></td>
+        <td><%= link_to 'Destroy', lecture_section, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Lecture section', new_lecture_section_path %>
