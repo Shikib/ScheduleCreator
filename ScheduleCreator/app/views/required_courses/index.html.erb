@@ -1,0 +1,23 @@
+<div class="container">
+  <h1>What courses are you interested in taking?</h1>
+
+  <table class="striped">
+    <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @required_courses.each do |rc| %>
+        <tr>
+          <% @course = Course.where(courseId: rc.courseId, subject: Subject.where(department: rc.department)).first %>
+          <td><%= link_to @course.title, @course %></td>
+          <td><%= link_to 'Remove', rc, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <br>
+</div>

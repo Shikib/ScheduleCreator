@@ -1,0 +1,1 @@
+ENV['SSL_ CERT_FILE'] = 'C:\Users\hp\Desktop\cacert'

@@ -1,0 +1,2 @@
+module LabSectionsHelper
+end
